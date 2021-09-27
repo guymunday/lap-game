@@ -71,7 +71,7 @@ export default function Prize({ startNewGame }) {
       scale: 0.8,
       opacity: 0,
       delay: 0.25,
-      stagger: 0.15
+      stagger: 0.15,
     })
   }, [])
 
@@ -145,13 +145,13 @@ export default function Prize({ startNewGame }) {
           <button className="button" style={{ width: "100%" }}>
             Choose your prize
           </button>
-          {parseInt(cookies.playAttempts, 10) > 0 && (
+          {parseInt(cookies.playAttempts, 10) > 1 && (
             <button onClick={startNewGame}>Try again</button>
           )}
           <p className="tries-left">
             <span>
-              {parseInt(cookies.playAttempts, 10) > 0
-                ? cookies.playAttempts
+              {parseInt(cookies.playAttempts, 10) > 1
+                ? parseInt(cookies.playAttempts, 10) - 1
                 : 0}
             </span>{" "}
             games remaining today

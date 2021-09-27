@@ -9,6 +9,7 @@ let initialGameContext = {
   score: 0,
   audio: true,
   currency: "£",
+  open: 1,
 }
 
 const GameStateContext = createContext(initialGameContext)
@@ -62,6 +63,12 @@ const gameReducer = (state, action) => {
       return {
         ...state,
         currency: action.currency,
+      }
+    }
+    case "UPDATE_GAME_OPEN": {
+      return {
+        ...state,
+        open: action.open,
       }
     }
     default: {

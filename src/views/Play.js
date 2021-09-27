@@ -98,11 +98,10 @@ const MobileTimerStyles = styled.div`
 `
 
 export default function Play() {
-  const seconds = 1 // 61 to allow for animation to finish
+  const seconds = 61 // 61 to allow for animation to finish
 
   const [loading, setLoading] = React.useState(true)
   const [timer, setTimer] = React.useState(seconds)
-  const [newGame, setNewGame] = React.useState(false)
   const [flipped, setFlipped] = React.useState([])
   const [matched, setMatched] = React.useState([])
   const [gameScore, setGameScore] = React.useState(0)

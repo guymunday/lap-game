@@ -16,16 +16,21 @@ const StyledHeader = styled.header`
         width: 100%;
       }
     }
-  }
-  @media (max-width: 480px) {
-    padding: 5px 30px;
+    @media (max-width: 480px) {
+      padding: 5px 30px;
+    }
   }
 `
 
-const StyledImg = styled.img`
+const ImgStyles = styled.div`
   width: 100%;
   height: 60px;
-  object-fit: cover;
+  box-shadow: 0 5px 60px #000;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
   @media (max-width: 768px) {
     height: 30px;
   }
@@ -46,8 +51,9 @@ export default function Header() {
             />
           </a>
         </div>
-
-        <StyledImg src={drawsTexture} alt="" />
+        <ImgStyles>
+          <img src={drawsTexture} alt="" />
+        </ImgStyles>
       </StyledHeader>
     </>
   )

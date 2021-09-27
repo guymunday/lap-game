@@ -10,6 +10,9 @@ export const global = css`
     --progress: #d3bb89;
     --didot: "Didot", Georgia, "Times New Roman", Times, serif;
     --akkurat: "akkuratregular", sans-serif;
+    @media (max-width: 480px) {
+      font-size: 14px;
+    }
   }
 
   html {
@@ -30,6 +33,7 @@ export const global = css`
   main {
     flex: 1 0 auto;
     width: 100%;
+    overflow-x: hidden;
   }
 
   header,

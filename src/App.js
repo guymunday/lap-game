@@ -5,7 +5,7 @@ import Layout from "./components/Layout"
 
 import Home from "./views/Home"
 import Play from "./views/Play"
-import Closed from "./views/Closed"
+import ClosedPopup from "./components/ClosedPopup"
 
 export default function App({ currencySymbol, language }) {
   const dispatch = useGameDispatchContext()
@@ -24,9 +24,6 @@ export default function App({ currencySymbol, language }) {
             </Route>
             <Route path="/play">
               <Play />
-            </Route>
-            <Route path="/closed">
-              <Closed />
             </Route>
             <Route>
               <Home />

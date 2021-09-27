@@ -3,6 +3,7 @@ import styled from "styled-components"
 import concreteTexture from "../assets/images/concrete-texture.jpg"
 import drawsTexture from "../assets/images/draws-texture.jpg"
 import { imagePromise } from "../actions/imagePromise"
+import ClosedPopup from "./ClosedPopup"
 
 const TopDraws = styled.div`
   position: fixed;
@@ -13,6 +14,7 @@ const TopDraws = styled.div`
   height: 50%;
   pointer-events: none;
   transition: 0.8s ease;
+  z-index: 98;
   img {
     width: 100%;
     height: 100%;
@@ -68,6 +70,7 @@ export default function Layout({ children }) {
       <BottomDraws style={{ top: loading ? "50%" : "100%" }}>
         <img src={drawsTexture} alt="" />
       </BottomDraws>
+      <ClosedPopup />
     </>
   )
 }
