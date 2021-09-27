@@ -98,7 +98,7 @@ const MobileTimerStyles = styled.div`
 `
 
 export default function Play() {
-  const seconds = 63 // 63 to allow for animation to finish
+  const seconds = 1 // 61 to allow for animation to finish
 
   const [loading, setLoading] = React.useState(true)
   const [timer, setTimer] = React.useState(seconds)
@@ -130,24 +130,24 @@ export default function Play() {
   }
 
   const animateCards = () => {
-    let tl = gsap.timeline()
-
-    tl.fromTo(
+    gsap.fromTo(
       ".card",
       {
-        rotateY: -720,
+        x: 1000,
+        y: 1000,
+        rotate: -60,
+        skewY: -60,
         opacity: 0,
-        pointerEvents: "none",
       },
       {
-        rotateY: 0,
+        x: 0,
+        y: 0,
+        rotate: 0,
+        skewY: 0,
         opacity: 1,
-        duration: 2,
+        duration: 0.3,
         stagger: 0.1,
-        transformOrigin: "50% 0%",
-        pointerEvents: "unset",
-      },
-      "<"
+      }
     )
   }
 

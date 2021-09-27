@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { useCookies } from "react-cookie"
+import { gsap } from "gsap"
 import Popup from "./Popup"
 import { useGameStateContext } from "../actions/gameReducer"
 import bronzeTexture from "../assets/images/bronze.jpg"
@@ -65,6 +66,15 @@ export default function Prize({ startNewGame }) {
   const { score, prize, currency } = useGameStateContext()
   const [cookies, setCookie] = useCookies(["playAttempts"])
 
+  React.useEffect(() => {
+    gsap.from(".prize-container", {
+      scale: 0.8,
+      opacity: 0,
+      delay: 0.25,
+      stagger: 0.15
+    })
+  }, [])
+
   return (
     <>
       <Popup>
@@ -87,7 +97,18 @@ export default function Prize({ startNewGame }) {
                 >
                   <img src={bronzeTexture} alt="" />
                 </div>
-                <p>BRONZE</p>
+                <p
+                  style={{
+                    opacity:
+                      prize === "BRONZE" ||
+                      prize === "SILVER" ||
+                      prize === "GOLD"
+                        ? 1
+                        : 0.1,
+                  }}
+                >
+                  BRONZE
+                </p>
               </div>
               <div className="prize-container">
                 <div
@@ -98,7 +119,13 @@ export default function Prize({ startNewGame }) {
                 >
                   <img src={silverTexture} alt="" />
                 </div>
-                <p>SILVER</p>
+                <p
+                  style={{
+                    opacity: prize === "SILVER" || prize === "GOLD" ? 1 : 0.1,
+                  }}
+                >
+                  SILVER
+                </p>
               </div>
               <div className="prize-container">
                 <div
@@ -107,7 +134,7 @@ export default function Prize({ startNewGame }) {
                 >
                   <img src={goldTexture} alt="" />
                 </div>
-                <p>GOLD</p>
+                <p style={{ opacity: prize === "GOLD" ? 1 : 0.1 }}>GOLD</p>
               </div>
             </div>
             <p>

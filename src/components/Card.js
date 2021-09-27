@@ -13,6 +13,7 @@ const CardStyles = styled.div`
   transform-style: preserve-3d;
   perspective: 1000px;
   backface-visibility: visible;
+  z-index: 1;
   .card-back {
     position: absolute;
     top: 0;
@@ -22,6 +23,7 @@ const CardStyles = styled.div`
     transition: 0.4s;
     backface-visibility: hidden;
     pointer-events: none;
+    transform-style: preserve-3d;
     &.flipped {
       transform: rotateY(180deg) perspective(100px);
     }

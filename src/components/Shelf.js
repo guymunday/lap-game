@@ -10,7 +10,6 @@ const ShelfStyles = styled.div`
   height: 0;
   width: ${(props) => (props.width ? props.width : "100%")};
   margin: 30px 0;
-  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 1));
   :after {
     content: "";
     display: block;
@@ -21,6 +20,7 @@ const ShelfStyles = styled.div`
     height: 4px;
     background-color: #7f5f1f;
     background-image: url(${shelfTexture});
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 1);
   }
 `
 

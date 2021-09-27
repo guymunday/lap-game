@@ -6,7 +6,7 @@ import { imagePromise } from "../actions/imagePromise"
 
 const TopDraws = styled.div`
   position: fixed;
-  background: brown;
+  background: black;
   top: 0;
   left: 0;
   width: 100%;
@@ -22,6 +22,15 @@ const TopDraws = styled.div`
 
 const BottomDraws = styled(TopDraws)`
   top: 50%;
+`
+
+const LoadingStyles = styled.h2`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  z-index: 99;
 `
 
 const BackgroundImage = styled.div`
@@ -52,6 +61,7 @@ export default function Layout({ children }) {
         <img src={concreteTexture} alt="" />
       </BackgroundImage>
       {children}
+      {loading && <LoadingStyles>Loading...</LoadingStyles>}
       <TopDraws style={{ top: loading ? 0 : "-50%" }}>
         <img src={drawsTexture} alt="" />
       </TopDraws>
