@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react"
+import { Switch, BrowserRouter as Router, Route } from "react-router-dom"
+import { useGameDispatchContext } from "./actions/gameReducer"
+import Layout from "./components/Layout"
 
-function App() {
+import Home from "./views/Home"
+import Play from "./views/Play"
+import Closed from "./views/Closed"
+
+export default function App({ currencySymbol, language }) {
+  const dispatch = useGameDispatchContext()
+
+  React.useEffect(() => {
+    dispatch({ type: "UPDATE_CURRENCY", currency: currencySymbol })
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <Router>
+        <Layout>
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route path="/play">
+              <Play />
+            </Route>
+            <Route path="/closed">
+              <Closed />
+            </Route>
+            <Route>
+              <Home />
+            </Route>
+          </Switch>
+        </Layout>
+      </Router>
+    </>
+  )
 }
-
-export default App;

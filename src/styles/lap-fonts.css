@@ -1,0 +1,20 @@
+@font-face {
+  font-family: "akkuratregular";
+  src: url("../assets/fonts/akkurat_regular-webfont.eot");
+  src: url("../assets/fonts/akkurat_regular-webfont.woff2") format("woff2"),
+    url("../assets/fonts/akkurat_regular-webfont.woff") format("woff"),
+    url("../assets/fonts/akkurat_regular-webfont.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "akkurat_lightregular";
+  src: url("../assets/fonts/akkurat_light-webfont.eot");
+  src: url("../assets/fonts/akkurat_light-webfont.woff2") format("woff2"),
+    url("../assets/fonts/akkurat_light-webfont.woff") format("woff"),
+    url("../assets/fonts/akkurat_light-webfont.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
