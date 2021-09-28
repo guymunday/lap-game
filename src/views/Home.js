@@ -4,9 +4,7 @@ import { useCookies } from "react-cookie"
 import styled from "styled-components"
 import Shelf from "../components/Shelf"
 import TermsAndAudio from "../components/TermsAndAudio"
-import productOne from "../assets/images/lap-candle.png"
-import productTwo from "../assets/images/lap-bottle.png"
-import productThree from "../assets/images/lap-wrap.png"
+import homeImage from "../assets/images/lap-home-image.png"
 
 const HomeStyles = styled.div`
   padding: 60px 20px;
@@ -61,13 +59,7 @@ export default function Home() {
           </p>
           <div className="product-images">
             <div className="product-image-wrapper">
-              <img src={productOne} alt="" />
-            </div>
-            <div className="product-image-wrapper">
-              <img src={productTwo} alt="" />
-            </div>
-            <div className="product-image-wrapper">
-              <img src={productThree} alt="" />
+              <img src={homeImage} alt="" />
             </div>
           </div>
           <Shelf />

@@ -23,6 +23,7 @@ const TermsAndAudioStyles = styled.nav`
     left: 0;
     right: 0;
     background: #000;
+    z-index: 3;
     .terms-inner {
       padding: 10px 20px;
       button {
@@ -52,7 +53,6 @@ export default function TermsAndAudio() {
       <TermsAndAudioStyles>
         <div className="terms-inner">
           <button onClick={handleAudioButton}>
-            {/* <img src={!audio ? audioOn : audioMute} alt="toggle audio" /> */}
             {audio ? (
               <svg
                 viewBox="0 0 16 16"
