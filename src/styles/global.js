@@ -7,7 +7,7 @@ export const global = css`
     font-weight: 400;
     color: #000;
     line-height: 1.4;
-    --progress: #d3bb89;
+    --progress: #b34643;
     --didot: "Didot", Georgia, "Times New Roman", Times, serif;
     --akkurat: "akkuratregular", sans-serif;
     @media (max-width: 480px) {
@@ -74,7 +74,7 @@ export const global = css`
 
   .button {
     display: inline-block;
-    width: 200px;
+    min-width: 200px;
     background: black;
     padding: 10px;
     color: #fff;

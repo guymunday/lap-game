@@ -1,23 +1,24 @@
 import React from "react"
-import { useGameStateContext } from "../actions/gameReducer"
+import { useGameStateContext } from "../utils/gameReducer"
 import Popup from "./Popup"
 
-export default function ClosedPopup() {
-  const { open } = useGameStateContext()
+export default function ClosedPopup({ data }) {
+  const { open, language } = useGameStateContext()
 
   return (
     <>
-      {parseInt(open, 10) === 2 && (
+      {open === "off" && (
         <>
           <Popup>
-            <h2>GAME CLOSED</h2>
-            <p>
-              Thank you for stopping by.
-              <br />
-              The game is now closed.
-            </p>
-            <a className="button" href="https://www.artisanparfumeur.com">
-              Continue Shopping
+            <h2>{data?.block[0]?.widgets?.title}</h2>
+            <p>{data?.block[0]?.widgets?.text}</p>
+            <a
+              className="button"
+              href={`https://www.artisanparfumeur.${
+                language === "FR" ? "fr" : "com"
+              }`}
+            >
+              {data?.block[0]?.widgets?.btn_text}
             </a>
           </Popup>
         </>

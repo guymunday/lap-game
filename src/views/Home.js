@@ -2,6 +2,10 @@ import React from "react"
 import { Link } from "react-router-dom"
 import { useCookies } from "react-cookie"
 import styled from "styled-components"
+import {
+  useGameStateContext,
+  useGameDispatchContext,
+} from "../utils/gameReducer"
 import Shelf from "../components/Shelf"
 import TermsAndAudio from "../components/TermsAndAudio"
 import homeImage from "../assets/images/lap-home-image.png"
@@ -12,7 +16,6 @@ const HomeStyles = styled.div`
   .home-inner {
     max-width: 580px;
     min-height: 400px;
-    overflow: hidden;
     > *:not(:last-child) {
       margin-bottom: 20px;
     }
@@ -43,35 +46,53 @@ const HomeStyles = styled.div`
   }
 `
 
-export default function Home() {
+export default function Home({ data }) {
   const [cookies, setCookie] = useCookies(["playAttempts"])
+  const { url, language } = useGameStateContext()
+  const dispatch = useGameDispatchContext()
+
+  const handlePlayClick = () => {
+    dispatch({ type: "UPDATE_AUDIO", audio: true })
+  }
 
   return (
     <>
       <HomeStyles className="content-flex">
         <div className="home-inner content-flex">
-          <h1>
-            PAIR A<br className="hide-large" /> BOTANICAL
-          </h1>
-          <p>
-            FIND AS MANY MATCHING CARDS AS YOU CAN IN A MINUTE TO WIN A PRIZE
-            FROM ONE OF OUR PRIZE CATEGORIES, BRONZE, SILVER OR GOLD
-          </p>
+          <h1>{data?.home[0]?.widgets?.title}</h1>
+          {parseInt(cookies.playAttempts, 10) <= 0 ? (
+            <p>{data?.notries[0]?.widgets?.text}</p>
+          ) : (
+            <p>{data?.home[0]?.widgets?.text}</p>
+          )}
           <div className="product-images">
             <div className="product-image-wrapper">
-              <img src={homeImage} alt="" />
+              <img
+                src={
+                  `${url}/api/media/uploads/${data?.home[0]?.widgets?.desktop_image?.name}` ||
+                  homeImage
+                }
+                alt=""
+              />
             </div>
           </div>
           <Shelf />
           {parseInt(cookies.playAttempts, 10) <= 0 ? (
-            <h2 style={{ marginTop: 30 }}>Come back tomorrow</h2>
+            <a
+              href={`https://www.artisanparfumeur.${
+                language === "FR" ? "fr" : "com"
+              }`}
+              className="button"
+            >
+              {data?.notries[0]?.widgets?.btn_text}
+            </a>
           ) : (
-            <Link to="/play" className="button">
-              Play
+            <Link to="/play" className="button" onClick={handlePlayClick}>
+              {data?.home[0]?.widgets?.btn_text}
             </Link>
           )}
         </div>
-        <TermsAndAudio />
+        <TermsAndAudio data={data} />
       </HomeStyles>
     </>
   )

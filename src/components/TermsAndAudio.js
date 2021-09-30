@@ -3,7 +3,8 @@ import styled from "styled-components"
 import {
   useGameDispatchContext,
   useGameStateContext,
-} from "../actions/gameReducer"
+} from "../utils/gameReducer"
+import music from "../assets/music.mp3"
 
 const TermsAndAudioStyles = styled.nav`
   position: absolute;
@@ -40,7 +41,8 @@ const TermsAndAudioStyles = styled.nav`
   }
 `
 
-export default function TermsAndAudio() {
+export default function TermsAndAudio({ data }) {
+  const audioRef = React.useRef(null)
   const { audio } = useGameStateContext()
   const dispatch = useGameDispatchContext()
 
@@ -48,12 +50,20 @@ export default function TermsAndAudio() {
     dispatch({ type: "UPDATE_AUDIO", audio: !audio })
   }
 
+  React.useEffect(() => {
+    if (audio) {
+      audioRef.current.play()
+    } else {
+      audioRef.current.pause()
+    }
+  }, [audio])
+
   return (
     <>
       <TermsAndAudioStyles>
         <div className="terms-inner">
           <button onClick={handleAudioButton}>
-            {audio ? (
+            {!audio ? (
               <svg
                 viewBox="0 0 16 16"
                 height="40"
@@ -81,8 +91,12 @@ export default function TermsAndAudio() {
               </svg>
             )}
           </button>
-          <a href="#">Ts & Cs</a>
+
+          <a href={data?.home[0]?.widgets?.link_address}>Ts & Cs</a>
         </div>
+        <audio ref={audioRef} loop>
+          <source src={music} />
+        </audio>
       </TermsAndAudioStyles>
     </>
   )

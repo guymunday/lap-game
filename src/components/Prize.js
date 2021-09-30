@@ -1,9 +1,10 @@
 import React from "react"
+import axios from "axios"
 import styled from "styled-components"
 import { useCookies } from "react-cookie"
 import { gsap } from "gsap"
 import Popup from "./Popup"
-import { useGameStateContext } from "../actions/gameReducer"
+import { useGameStateContext } from "../utils/gameReducer"
 import bronzeTexture from "../assets/images/bronze.jpg"
 import silverTexture from "../assets/images/silver.jpg"
 import goldTexture from "../assets/images/gold.jpg"
@@ -59,94 +60,112 @@ const PrizeStyles = styled.div`
   }
   .terms {
     font-size: 0.8rem;
+    text-decoration: none;
+    :hover {
+      text-decoration: underline;
+    }
   }
 `
 
-export default function Prize({ startNewGame }) {
-  const { score, prize, currency } = useGameStateContext()
+export default function Prize({ startNewGame, data }) {
+  const { score, prize, currency, tries, url, id } = useGameStateContext()
   const [cookies, setCookie] = useCookies(["playAttempts"])
 
   React.useEffect(() => {
     gsap.from(".prize-container", {
       scale: 0.8,
-      opacity: 0,
+      autoAlpha: 0,
       delay: 0.25,
       stagger: 0.15,
     })
+  }, [])
+
+  React.useEffect(() => {
+    axios
+      .post(`${url}/api/v1/end`, {
+        id,
+        point: score,
+      })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }, [])
 
   return (
     <>
       <Popup>
         <PrizeStyles>
-          <h1>Congratulations</h1>
-          <p>You found {score} matches</p>
+          <h1>
+            {prize === "LOST"
+              ? data?.result[0]?.widgets?.lost_text
+              : prize === "BRONZE"
+              ? data?.result[0]?.widgets?.bronze_text
+              : prize === "SILVER"
+              ? data?.result[0]?.widgets?.silver_text
+              : data?.result[0]?.widgets?.gold_text}
+          </h1>
+          <p>
+            {data?.result[0]?.widgets?.found_match.replace("{score}", score)}
+          </p>
           <div className="prize-prizes">
             <div className="prize-texture-container">
-              <div className="prize-container">
-                <div
-                  className="prize-texture bronze"
-                  style={{
-                    opacity:
-                      prize === "BRONZE" ||
-                      prize === "SILVER" ||
-                      prize === "GOLD"
-                        ? 1
-                        : 0.1,
-                  }}
-                >
+              <div
+                className="prize-container"
+                style={{
+                  opacity:
+                    prize === "BRONZE" || prize === "SILVER" || prize === "GOLD"
+                      ? 1
+                      : 0.1,
+                }}
+              >
+                <div className="prize-texture bronze">
                   <img src={bronzeTexture} alt="" />
                 </div>
-                <p
-                  style={{
-                    opacity:
-                      prize === "BRONZE" ||
-                      prize === "SILVER" ||
-                      prize === "GOLD"
-                        ? 1
-                        : 0.1,
-                  }}
-                >
-                  BRONZE
-                </p>
+                <p>{data?.result[0]?.widgets?.bronze_individual_text}</p>
               </div>
-              <div className="prize-container">
-                <div
-                  className="prize-texture silver"
-                  style={{
-                    opacity: prize === "SILVER" || prize === "GOLD" ? 1 : 0.1,
-                  }}
-                >
+              <div
+                className="prize-container"
+                style={{
+                  opacity: prize === "SILVER" || prize === "GOLD" ? 1 : 0.1,
+                }}
+              >
+                <div className="prize-texture silver">
                   <img src={silverTexture} alt="" />
                 </div>
-                <p
-                  style={{
-                    opacity: prize === "SILVER" || prize === "GOLD" ? 1 : 0.1,
-                  }}
-                >
-                  SILVER
-                </p>
+                <p>{data?.result[0]?.widgets?.silver_individual_text}</p>
               </div>
-              <div className="prize-container">
-                <div
-                  className="prize-texture gold"
-                  style={{ opacity: prize === "GOLD" ? 1 : 0.1 }}
-                >
+              <div
+                className="prize-container"
+                style={{ opacity: prize === "GOLD" ? 1 : 0.1 }}
+              >
+                <div className="prize-texture gold">
                   <img src={goldTexture} alt="" />
                 </div>
-                <p style={{ opacity: prize === "GOLD" ? 1 : 0.1 }}>GOLD</p>
+                <p>{data?.result[0]?.widgets?.gold_individual_text}</p>
               </div>
             </div>
             <p>
-              You unlocked the {prize} level prize. Lorem ipsum. You unlocked
-              the bronze level {prize}. Lorem ipsum.
+              {prize === "LOST"
+                ? data?.result[0]?.widgets?.lost_on_third_try_text
+                : prize === "BRONZE"
+                ? data?.result[0]?.widgets?.bronze_text_bottom
+                : prize === "SILVER"
+                ? data?.result[0]?.widgets?.silver_text_bottom
+                : data?.result[0]?.widgets?.gold_text_bottom}
             </p>
           </div>
-          <button className="button" style={{ width: "100%" }}>
-            Choose your prize
-          </button>
+          {prize !== "LOST" && (
+            <button className="button" style={{ width: "100%" }}>
+              {data?.result[0]?.widgets?.add_to_cart}
+            </button>
+          )}
           {parseInt(cookies.playAttempts, 10) > 1 && (
-            <button onClick={startNewGame}>Try again</button>
+            <button onClick={startNewGame}>
+              {data?.result[0]?.widgets?.play_again}
+            </button>
           )}
           <p className="tries-left">
             <span>
@@ -154,13 +173,13 @@ export default function Prize({ startNewGame }) {
                 ? parseInt(cookies.playAttempts, 10) - 1
                 : 0}
             </span>{" "}
-            games remaining today
+            {data?.result[0]?.widgets?.tries_left}
           </p>
-          <p className="terms">
-            Your prize will be added to your basket with an order of {currency}
-            140 or more. Limited to 3 plays per day.{" "}
-            <a href="#">Peruse the full terms and conditions.</a>
-          </p>
+          <a className="terms" href={data?.home[0]?.widgets?.link_address}>
+            {data?.home[0]?.widgets?.terms_text
+              .replace("{tries}", tries)
+              .replace("{currency}", currency)}
+          </a>
         </PrizeStyles>
       </Popup>
     </>

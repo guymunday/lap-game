@@ -2,7 +2,7 @@ import React from "react"
 import styled from "styled-components"
 import concreteTexture from "../assets/images/concrete-texture.jpg"
 import drawsTexture from "../assets/images/draws-texture.jpg"
-import { imagePromise } from "../actions/imagePromise"
+import { imagePromise } from "../utils/imagePromise"
 import ClosedPopup from "./ClosedPopup"
 
 const TopDraws = styled.div`
@@ -48,9 +48,7 @@ const BackgroundImage = styled.div`
   }
 `
 
-const TermsStyles = styled.div``
-
-export default function Layout({ children }) {
+export default function Layout({ children, data }) {
   const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
@@ -70,7 +68,7 @@ export default function Layout({ children }) {
       <BottomDraws style={{ top: loading ? "50%" : "100%" }}>
         <img src={drawsTexture} alt="" />
       </BottomDraws>
-      <ClosedPopup />
+      <ClosedPopup data={data} />
     </>
   )
 }

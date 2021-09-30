@@ -5,8 +5,8 @@ import { createGlobalStyle } from "styled-components"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
 import App from "./App"
-import useQueryString from "./actions/query-string/useQueryString"
-import { GlobalProvider } from "./actions/gameReducer"
+import useQueryString from "./utils/query-string/useQueryString"
+import { GlobalProvider } from "./utils/gameReducer"
 
 //CSS
 import "./styles/reset.css"
@@ -27,18 +27,18 @@ export default function Root() {
       ? "$"
       : "£"
 
+  const languageSelector = language === "fr" ? "FR" : "default"
+
   return (
     <>
       <GlobalProvider>
         <Helmet>
-          <title>
-            {currencySymbol + ", " + language} | L'Artisan Parfumeur
-          </title>
+          <title>L'Artisan Parfumeur</title>
         </Helmet>
         <GlobalStyles />
         <Header />
         <main>
-          <App currencySymbol={currencySymbol} language={language} />
+          <App currencySymbol={currencySymbol} language={languageSelector} />
         </main>
         <Footer />
       </GlobalProvider>

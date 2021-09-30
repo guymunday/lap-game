@@ -7,9 +7,10 @@ let initialGameContext = {
   prize: "",
   previousPrize: "",
   score: 0,
-  audio: true,
+  audio: false,
   currency: "£",
-  open: 1,
+  open: "on",
+  tries: 7,
 }
 
 const GameStateContext = createContext(initialGameContext)
@@ -65,10 +66,28 @@ const gameReducer = (state, action) => {
         currency: action.currency,
       }
     }
+    case "UPDATE_LANGUAGE": {
+      return {
+        ...state,
+        language: action.language,
+      }
+    }
     case "UPDATE_GAME_OPEN": {
       return {
         ...state,
         open: action.open,
+      }
+    }
+    case "UPDATE_API_URL": {
+      return {
+        ...state,
+        url: action.url,
+      }
+    }
+    case "UPDATE_TRIES": {
+      return {
+        ...state,
+        tries: action.tries,
       }
     }
     default: {

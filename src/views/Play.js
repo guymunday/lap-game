@@ -1,18 +1,19 @@
 import React from "react"
 import { Redirect } from "react-router-dom"
+import axios from "axios"
 import styled from "styled-components"
 import { useCookies } from "react-cookie"
 import { gsap } from "gsap"
 import Card from "../components/Card"
 import Shelf from "../components/Shelf"
 import Timer from "../components/Timer"
-import { shuffledCards } from "../actions/shuffleCards"
+import { shuffledCards } from "../utils/shuffleCards"
 import {
   useGameStateContext,
   useGameDispatchContext,
-} from "../actions/gameReducer"
+} from "../utils/gameReducer"
 import Prize from "../components/Prize"
-import { imagePromise } from "../actions/imagePromise"
+import { imagePromise } from "../utils/imagePromise"
 import TermsAndAudio from "../components/TermsAndAudio"
 
 const LoadingStyles = styled.h2`
@@ -97,8 +98,8 @@ const MobileTimerStyles = styled.div`
   }
 `
 
-export default function Play() {
-  const seconds = 61 // 61 to allow for animation to finish
+export default function Play({ data }) {
+  const seconds = parseInt(data?.settings[0]?.widgets?.play_time, 10) + 1 || 61 // add one to account for animation
 
   const [loading, setLoading] = React.useState(true)
   const [timer, setTimer] = React.useState(seconds)
@@ -107,18 +108,36 @@ export default function Play() {
   const [gameScore, setGameScore] = React.useState(0)
 
   const dispatch = useGameDispatchContext()
-  const { firstPrize, prize } = useGameStateContext()
+  const { firstPrize, prize, tries, open, url, language } =
+    useGameStateContext()
   const [cookies, setCookie] = useCookies(["playAttempts"])
 
-  const attempts = 7
+  const attempts = tries
 
-  const bronze = 0
-  const silver = 3
-  const gold = 5
+  const bronze = parseInt(data?.settings[0]?.widgets?.point_bronze, 10)
+  const silver = parseInt(data?.settings[0]?.widgets?.point_silver, 10)
+  const gold = parseInt(data?.settings[0]?.widgets?.point_gold, 10)
 
-  const bronzeInStock = true
-  const silverInStock = true
-  const goldInStock = true
+  const bronzeInStock =
+    parseInt(data?.settings[0]?.widgets?.stock_bronze, 10) > 0
+  const silverInStock =
+    parseInt(data?.settings[0]?.widgets?.stock_silver, 10) > 0
+  const goldInStock = parseInt(data?.settings[0]?.widgets?.stock_gold, 10) > 0
+
+  const apiGameStart = () => {
+    axios
+      .post(`${url}/api/v1/start`, {
+        try: parseInt(cookies.playAttempts, 10),
+        country_code: language,
+      })
+      .then((res) => {
+        dispatch({
+          type: "UPDATE_ID",
+          id: res.data.data.id,
+        })
+      })
+      .catch((error) => console.log(error))
+  }
 
   const shuffleCards = () => {
     const cardSelector = document.querySelectorAll(".card")
@@ -164,6 +183,7 @@ export default function Play() {
       prize: "",
     })
 
+    apiGameStart()
     shuffleCards()
     setTimer(seconds)
     setMatched([])
@@ -196,14 +216,6 @@ export default function Play() {
       timer > 0 && setTimer(timer - 0.01)
     }, 10)
     return () => clearTimeout(timeout)
-  }, [timer])
-
-  React.useEffect(() => {
-    if (timer < 15) {
-      document.documentElement.style.setProperty("--progress", "#B34643")
-    } else {
-      document.documentElement.style.setProperty("--progress", "#D3BB89")
-    }
   }, [timer])
 
   function handleCardClick(e) {
@@ -246,7 +258,7 @@ export default function Play() {
     if (matched.length === 8 || timer <= 0) {
       dispatch({ type: "UPDATE_SCORE", score: gameScore })
       if (gameScore < bronze) {
-        dispatch({ type: "UPDATE_PRIZE", prize: "none" })
+        dispatch({ type: "UPDATE_PRIZE", prize: "LOST" })
       } else if (gameScore >= bronze && gameScore < silver && bronzeInStock) {
         dispatch({ type: "UPDATE_PRIZE", prize: "BRONZE" })
       } else if (
@@ -272,7 +284,7 @@ export default function Play() {
     !loading && startNewGame()
   }, [loading])
 
-  if (parseInt(cookies.playAttempts, 10) <= 0) {
+  if (parseInt(cookies.playAttempts, 10) <= 0 || open === "off") {
     return <Redirect to="/" />
   }
 
@@ -280,7 +292,7 @@ export default function Play() {
     <>
       {!loading && (
         <MobileTimerStyles>
-          <Timer value={timer} />
+          <Timer value={timer} max={seconds} />
         </MobileTimerStyles>
       )}
       <div className="content-flex">
@@ -305,14 +317,13 @@ export default function Play() {
         </CardsGrid>
         {!loading && (
           <DesktopTimerStyles>
-            <Timer value={timer} />
+            <Timer value={timer} max={seconds} />
           </DesktopTimerStyles>
         )}
-        <TermsAndAudio />
+        <TermsAndAudio data={data} />
         {loading && <LoadingStyles>Loading...</LoadingStyles>}
       </div>
-      {/* {loading && <LoadingScreen />} */}
-      {prize && !loading && <Prize startNewGame={startNewGame} />}
+      {prize && !loading && <Prize startNewGame={startNewGame} data={data} />}
     </>
   )
 }
